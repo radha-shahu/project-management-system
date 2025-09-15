@@ -18,7 +18,7 @@ export const routes: Routes = [
     },
     {
         path: 'projects',
-        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule),
+        loadComponent: () => import('./projects/project-list/project-list.component').then(m => m.ProjectListComponent),
         canActivate: [authGuard]
     },
     {
