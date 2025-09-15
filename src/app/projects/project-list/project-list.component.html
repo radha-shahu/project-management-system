@@ -1,0 +1,68 @@
+<div class="project-list-layout">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+        <div class="project-list-container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1 class="page-title">Projects</h1>
+                    <p class="page-subtitle">Manage and track your projects</p>
+                </div>
+                <app-button type="primary" size="large" (clicked)="onCreateProject()">
+                    Create New Project
+                </app-button>
+            </div>
+
+            <app-loader *ngIf="isLoading" size="large" message="Loading projects..." [overlay]="true"></app-loader>
+
+            <div class="content-area" [style.opacity]="isLoading ? '0.5' : '1'">
+                <!-- Empty State -->
+                <div *ngIf="!isLoading && !hasProjects()" class="empty-state">
+                    <div class="empty-state-icon">📁</div>
+                    <h2 class="empty-state-title">No Projects Yet</h2>
+                    <p class="empty-state-description">
+                        You haven't created any projects yet. Start by creating your first project to begin managing
+                        your work.
+                    </p>
+                    <app-button type="primary" size="large" (clicked)="onCreateProject()">
+                        Create Your First Project
+                    </app-button>
+                </div>
+
+                <!-- Projects Grid -->
+                <div *ngIf="!isLoading && hasProjects()" class="projects-grid">
+                    <div *ngFor="let project of projects" class="project-card" (click)="onProjectClick(project)">
+                        <div class="project-header">
+                            <h3 class="project-name">{{ project.name }}</h3>
+                            <span class="project-status" [class]="getProjectStatusClass(project.status || 'active')">
+                                {{ getProjectStatusText(project.status || 'active') }}
+                            </span>
+                        </div>
+
+                        <div class="project-description" *ngIf="project.description">
+                            <p>{{ project.description }}</p>
+                        </div>
+
+                        <div class="project-dates">
+                            <div class="date-item">
+                                <span class="date-label">Start:</span>
+                                <span class="date-value">{{ formatDate(project.startDate) }}</span>
+                            </div>
+                            <div class="date-item">
+                                <span class="date-label">End:</span>
+                                <span class="date-value">{{ formatDate(project.endDate) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="project-footer">
+                            <span class="project-created">
+                                Created {{ formatDate(project.createdAt || '') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

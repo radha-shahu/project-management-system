@@ -1,0 +1,81 @@
+<div class="project-create-layout">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+        <div class="project-create-container">
+            <div class="page-header">
+                <h1 class="page-title">Create New Project</h1>
+                <p class="page-subtitle">Fill in the details to create a new project</p>
+            </div>
+
+            <app-loader *ngIf="isLoading" size="large" message="Creating your project..." [overlay]="true"></app-loader>
+
+            <div class="form-container" [style.opacity]="isLoading ? '0.5' : '1'">
+                <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+                    <div class="form-section">
+                        <h3 class="section-title">Project Information</h3>
+
+                        <div class="form-group">
+                            <label for="name" class="form-label">Project Name *</label>
+                            <input type="text" id="name" formControlName="name" class="form-input"
+                                [class.form-input-error]="isFieldInvalid('name')" placeholder="Enter project name">
+                            <div *ngIf="isFieldInvalid('name')" class="form-error">
+                                {{ getFieldError('name') }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" formControlName="description" class="form-textarea"
+                                [class.form-input-error]="isFieldInvalid('description')"
+                                placeholder="Enter project description (optional)" rows="4"></textarea>
+                            <div *ngIf="isFieldInvalid('description')" class="form-error">
+                                {{ getFieldError('description') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Project Timeline</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate" class="form-label">Start Date *</label>
+                                <input type="date" id="startDate" formControlName="startDate" class="form-input"
+                                    [class.form-input-error]="isFieldInvalid('startDate')">
+                                <div *ngIf="isFieldInvalid('startDate')" class="form-error">
+                                    {{ getFieldError('startDate') }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endDate" class="form-label">End Date *</label>
+                                <input type="date" id="endDate" formControlName="endDate" class="form-input"
+                                    [class.form-input-error]="isFieldInvalid('endDate')" [min]="getMinEndDate()">
+                                <div *ngIf="isFieldInvalid('endDate')" class="form-error">
+                                    {{ getFieldError('endDate') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form-level error message -->
+                    <div *ngIf="getFormError()" class="form-error form-level-error">
+                        {{ getFormError() }}
+                    </div>
+
+                    <div class="form-actions">
+                        <app-button type="secondary" size="large" (clicked)="onCancel()" [disabled]="isLoading">
+                            Cancel
+                        </app-button>
+                        <app-button type="primary" size="large" [loading]="isLoading"
+                            [disabled]="projectForm.invalid || isLoading">
+                            {{ isLoading ? 'Creating Project...' : 'Create Project' }}
+                        </app-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>

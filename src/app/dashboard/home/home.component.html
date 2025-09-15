@@ -1,0 +1,48 @@
+<div class="dashboard-layout">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Dashboard</h1>
+                <p class="dashboard-subtitle">Welcome to your project management dashboard</p>
+            </div>
+
+            <app-loader *ngIf="isLoading" size="medium" message="Loading dashboard..." [overlay]="true"></app-loader>
+
+            <div class="dashboard-actions" [style.opacity]="isLoading ? '0.5' : '1'">
+                <div class="action-card">
+                    <div class="action-icon">📁</div>
+                    <h3 class="action-title">Create New Project</h3>
+                    <p class="action-description">Start a new project and begin managing your tasks</p>
+                    <app-button type="primary" size="large" (clicked)="onCreateProject()">
+                        Create Project
+                    </app-button>
+                </div>
+
+                <div class="action-card" *ngIf="projectsCount > 0">
+                    <div class="action-icon">📊</div>
+                    <h3 class="action-title">View All Projects</h3>
+                    <p class="action-description">You have {{ projectsCount }} project{{ projectsCount === 1 ? '' : 's'
+                        }}. View and manage them all.</p>
+                    <app-button type="secondary" size="large" (clicked)="onViewProjects()">
+                        View Projects
+                    </app-button>
+                </div>
+            </div>
+
+            <div class="dashboard-info">
+                <div class="info-card">
+                    <h3 class="info-title">Getting Started</h3>
+                    <ul class="info-list">
+                        <li>Click "Create Project" to start your first project</li>
+                        <li>Manage your team members in the Team section</li>
+                        <li>View reports and analytics in the Reports section</li>
+                        <li>Track project progress and deadlines</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
