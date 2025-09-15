@@ -22,7 +22,7 @@ Before setting up the project, ensure you have the following installed on your m
 
 1. **Clone the Repository**
    ```bash
-   git clone <your-github-repo-url>
+   git clone <github-repo-url>
    cd project-management-system
    ```
 
@@ -69,8 +69,7 @@ src/app/
 
 - **Development server:** `npm start` or `ng serve`
 - **Build:** `npm run build` or `ng build`
-- **Watch mode:** `npm run watch` or `ng build --watch --configuration development`
-- **Tests:** `npm test` or `ng test`
+
 
 ## 🎯 Key Features
 
@@ -84,20 +83,6 @@ src/app/
 
 ## 🔧 Development
 
-### Code Scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
 ### Building
 
 To build the project run:
@@ -107,14 +92,6 @@ ng build
 ```
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-### Testing
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
 
 ## 🐛 Troubleshooting
 
