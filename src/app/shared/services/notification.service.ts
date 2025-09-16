@@ -1,83 +1,90 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
 export interface Notification {
   id: string;
   type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message: string;
-  duration?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
-  public notifications$ = this.notificationsSubject.asObservable();
+  // array to store notifications
+  private notifications: Notification[] = [];
 
-  constructor() { }
+  constructor() {
+    console.log('NotificationService: Service initialized');
+  }
 
-  showSuccess(title: string, message: string, duration: number = 3000): void {
+  // get all current notifications
+  getNotifications(): Notification[] {
+    return this.notifications;
+  }
+
+  // show success notification
+  showSuccess(title: string, message: string): void {
+    console.log('NotificationService: Showing success notification:', title);
     this.addNotification({
       id: this.generateId(),
       type: 'success',
       title,
-      message,
-      duration
+      message
     });
   }
 
-  showError(title: string, message: string, duration: number = 5000): void {
+  // show error notification
+  showError(title: string, message: string): void {
+    console.log('NotificationService: Showing error notification:', title);
     this.addNotification({
       id: this.generateId(),
       type: 'error',
       title,
-      message,
-      duration
+      message
     });
   }
 
-  showWarning(title: string, message: string, duration: number = 4000): void {
+  // show warning notification
+  showWarning(title: string, message: string): void {
+    console.log('NotificationService: Showing warning notification:', title);
     this.addNotification({
       id: this.generateId(),
       type: 'warning',
       title,
-      message,
-      duration
+      message
     });
   }
 
-  showInfo(title: string, message: string, duration: number = 3000): void {
+  // show info notification
+  showInfo(title: string, message: string): void {
+    console.log('NotificationService: Showing info notification:', title);
     this.addNotification({
       id: this.generateId(),
       type: 'info',
       title,
-      message,
-      duration
+      message
     });
   }
 
+  // remove a specific notification
   removeNotification(id: string): void {
-    const currentNotifications = this.notificationsSubject.value;
-    const updatedNotifications = currentNotifications.filter(n => n.id !== id);
-    this.notificationsSubject.next(updatedNotifications);
+    console.log('NotificationService: Removing notification:', id);
+    this.notifications = this.notifications.filter(n => n.id !== id);
   }
 
+  // clear all notifications
   clearAll(): void {
-    this.notificationsSubject.next([]);
+    console.log('NotificationService: Clearing all notifications');
+    this.notifications = [];
   }
 
+  // add a new notification to the list
   private addNotification(notification: Notification): void {
-    const currentNotifications = this.notificationsSubject.value;
-    this.notificationsSubject.next([...currentNotifications, notification]);
+    console.log('NotificationService: Adding notification:', notification.title);
 
-    // Auto-remove after duration
-    if (notification.duration) {
-      setTimeout(() => {
-        this.removeNotification(notification.id);
-      }, notification.duration);
-    }
+    this.notifications.push(notification);
+
+    console.log('NotificationService: Notification added and will stay until manually closed');
   }
 
   private generateId(): string {

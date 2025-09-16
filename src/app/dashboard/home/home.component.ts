@@ -1,12 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { ProjectService } from '../../projects/services/project.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
-import { ProjectService } from '../../projects/services/project.service';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
@@ -19,42 +18,51 @@ import { NotificationService } from '../../shared/services/notification.service'
 export class HomeComponent implements OnInit {
   projectsCount = 0;
   isLoading = false;
-  private destroy$ = new Subject<void>();
-  private router = inject(Router);
-  private projectService = inject(ProjectService);
-  private notificationService = inject(NotificationService);
+
+
+  constructor(
+    private router: Router,
+    private projectService: ProjectService,
+    private notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
+    console.log('HomeComponent: Component initialized');
     this.loadProjectsCount();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
+  // load the count of projects
   loadProjectsCount(): void {
+    console.log('HomeComponent: Loading projects count...');
     this.isLoading = true;
+
     this.projectService.getProjects().subscribe({
       next: (response) => {
         this.isLoading = false;
+        console.log('HomeComponent: Projects loaded successfully');
+
         if (response.status === 200 && response.data) {
           this.projectsCount = response.data.length;
+          console.log('HomeComponent: Projects count:', this.projectsCount);
         }
       },
       error: (error) => {
         this.isLoading = false;
+        console.log('HomeComponent: Error loading projects count:', error);
         this.notificationService.showError('Error', 'Failed to load projects count');
-        console.error('Error loading projects count:', error);
       }
     });
   }
 
+  // navigate to create project page
   onCreateProject(): void {
+    console.log('HomeComponent: Navigating to create project');
     this.router.navigate(['/projects/create']);
   }
 
+  // navigate to projects list page
   onViewProjects(): void {
+    console.log('HomeComponent: Navigating to projects list');
     this.router.navigate(['/projects']);
   }
 }

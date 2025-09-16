@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
-import { NotificationService, Notification } from '../../services/notification.service';
+import { Component, OnInit } from '@angular/core';
+import { Notification, NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-notification',
@@ -10,29 +9,31 @@ import { NotificationService, Notification } from '../../services/notification.s
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.scss'
 })
-export class NotificationComponent implements OnInit, OnDestroy {
+export class NotificationComponent implements OnInit {
   notifications: Notification[] = [];
-  private destroy$ = new Subject<void>();
+
 
   constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void {
-    this.notificationService.notifications$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(notifications => {
-        this.notifications = notifications;
-      });
+    console.log('NotificationComponent: Component initialized');
+
+    // get notifications directly from service
+    this.notifications = this.notificationService.getNotifications();
+
+    console.log('NotificationComponent: Current notifications:', this.notifications.length);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
+  // remove a specific notification
   removeNotification(id: string): void {
+    console.log('NotificationComponent: Removing notification:', id);
     this.notificationService.removeNotification(id);
+
+    // update local notifications array
+    this.notifications = this.notificationService.getNotifications();
   }
 
+  // get the appropriate icon for notification type
   getNotificationIcon(type: string): string {
     switch (type) {
       case 'success': return '✅';

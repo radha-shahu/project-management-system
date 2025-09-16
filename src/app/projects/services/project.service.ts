@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { ApiService } from '../../core/services/api.service';
 
 export interface Project {
   id?: number;
@@ -34,7 +33,7 @@ export interface ApiResponse<T> {
 export class ProjectService {
   private readonly STORAGE_KEY = 'projects';
 
-  constructor(private apiService: ApiService) { }
+  constructor() { }
 
   getProjects(): Observable<ApiResponse<Project[]>> {
     const projects = this.getFromStorage();
@@ -43,12 +42,6 @@ export class ProjectService {
       data: projects,
       message: 'Projects retrieved successfully'
     }).pipe(delay(800)); // Simulate API delay
-  }
-
-  getProject(id: number): Observable<Project | null> {
-    const projects = this.getFromStorage();
-    const project = projects.find(p => p.id === id);
-    return of(project || null);
   }
 
   createProject(projectData: CreateProjectRequest): Observable<ApiResponse<Project>> {
@@ -82,50 +75,7 @@ export class ProjectService {
       status: 201,
       data: newProject,
       message: 'Project created successfully'
-    }).pipe(delay(1200)); // Simulate API delay
-  }
-
-  updateProject(id: number, projectData: Partial<Project>): Observable<Project> {
-    const projects = this.getFromStorage();
-    const projectIndex = projects.findIndex(p => p.id === id);
-
-    if (projectIndex === -1) {
-      throw new Error('Project not found');
-    }
-
-    // Check for duplicate names (excluding current project)
-    if (projectData.name) {
-      const existingProject = projects.find(p =>
-        p.id !== id && p.name.toLowerCase().trim() === projectData.name!.toLowerCase().trim()
-      );
-
-      if (existingProject) {
-        throw new Error('Project name already exists');
-      }
-    }
-
-    const updatedProject = {
-      ...projects[projectIndex],
-      ...projectData,
-      updatedAt: new Date().toISOString()
-    };
-
-    projects[projectIndex] = updatedProject;
-    this.saveToStorage(projects);
-
-    return of(updatedProject);
-  }
-
-  deleteProject(id: number): Observable<boolean> {
-    const projects = this.getFromStorage();
-    const filteredProjects = projects.filter(p => p.id !== id);
-
-    if (projects.length === filteredProjects.length) {
-      throw new Error('Project not found');
-    }
-
-    this.saveToStorage(filteredProjects);
-    return of(true);
+    }).pipe(delay(1200));
   }
 
   private getFromStorage(): Project[] {
